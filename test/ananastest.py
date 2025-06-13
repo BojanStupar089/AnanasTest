@@ -65,7 +65,7 @@ def test_register_successful_on_ananas(driver):
 
     wait.until(EC.visibility_of_element_located((By.ID, "email")))
 
-    driver.find_element(By.ID,"email").send_keys("minos23654@finfave.com")
+    driver.find_element(By.ID,"email").send_keys("atsushi1@openlinemail.com")
     driver.find_element(By.ID,"firstName").send_keys("Bojan")
     driver.find_element(By.ID,"lastName").send_keys("Stupar")
     driver.find_element(By.NAME,"password").send_keys("Celarevo44!")
@@ -368,6 +368,118 @@ def test_login_click_forget_password_link(driver):
     wait.until(EC.visibility_of_element_located((By.ID, "email")))
     driver.find_element(By.ID, "email").send_keys("bojanstupar089@gmail.com")
     driver.find_element(By.ID, "login-submit").click()
+
+
+def test_ananas_click_contact_us_form(driver):
+    accept_cookies(driver)
+    wait = WebDriverWait(driver, 30)
+
+    contact_us_link = wait.until(EC.visibility_of_element_located((By.LINK_TEXT, "Piši nam")))
+    contact_us_link.click()
+    time.sleep(0.5)
+    contact_us_heading = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
+    assert "Korisnička podrška" in contact_us_heading, "Error"
+
+
+
+
+def test_ananas_click_wishlist_functionality(driver):
+    login(driver)
+    wait = WebDriverWait(driver, 30)
+
+    wishlist_link = wait.until(EC.visibility_of_element_located(
+        (By.XPATH, "//a[contains(@href, 'lista-zelja')]")
+    ))
+
+    driver.execute_script("arguments[0].click();", wishlist_link)
+
+    time.sleep(2)
+
+    wish_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Poželi želju']")))
+
+    # Click the button
+    wish_button.click()
+
+    result_heading=wait.until(EC.visibility_of_element_located((By.TAG_NAME,"h1"))).text
+    assert "Sve kategorije" in result_heading, "Error"
+
+
+
+def test_ananas_search_trambolina(driver):
+    accept_cookies(driver)
+    wait = WebDriverWait(driver, 30)
+
+    search_input=wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'aa-Input')))
+    search_input.send_keys("trambolina")
+
+    search_input.send_keys(Keys.ENTER)
+
+    result_title = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "h1.sc-1thjabt-0.gnAzSX")))
+    assert 'Rezultati za "trambolina"' in result_title.text
+
+def test_ananas_click_products_on_sale(driver):
+    accept_cookies(driver)
+    wait = WebDriverWait(driver, 30)
+
+    akcija_link = wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Akcija")))
+    driver.execute_script("arguments[0].click()",akcija_link)
+
+    heading = wait.until(EC.visibility_of_element_located((
+        By.XPATH, "//h1[contains(text(), 'Proizvodi na akciji')]"
+    )))
+    assert "Proizvodi na akciji" in heading.text, f"Expected heading to contain 'Proizvodi na akciji', but got: '{heading.text}'"
+
+def test_ananas_click_pools_shows_pools_page(driver):
+    accept_cookies(driver)
+    wait = WebDriverWait(driver, 30)
+
+    bazeni_link=wait.until(EC.visibility_of_element_located((By.LINK_TEXT,"Bazeni")))
+    bazeni_link.click()
+    time.sleep(1)
+    bazeni_heading=wait.until(EC.visibility_of_element_located((By.TAG_NAME,"h1"))).text
+
+    assert "Bazeni" in bazeni_heading,"Expected 'Bazeni' in bazeni_heading"
+
+def test_ananas_click_newest_products_shows_newest_page(driver):
+    accept_cookies(driver)
+    wait = WebDriverWait(driver, 30)
+
+    najnovije_link = wait.until(EC.visibility_of_element_located((By.LINK_TEXT, "Najnovije")))
+    driver.execute_script("arguments[0].click()",najnovije_link)
+    time.sleep(1)
+    najnovije_heading = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
+
+    assert "Najnoviji Proizvodi" in najnovije_heading, "Expected 'Najnoviji proizvodi' in najnovije_heading"
+
+def test_ananas_click_best_sellers_shows_best_sellers_page(driver):
+    accept_cookies(driver)
+    wait = WebDriverWait(driver, 30)
+
+    najprodavanije_link = wait.until(EC.visibility_of_element_located((By.LINK_TEXT, "Najprodavanije")))
+    driver.execute_script("arguments[0].click()",najprodavanije_link)
+    time.sleep(1)
+    najprodavanije_heading = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
+
+    assert "Najprodavanije" in najprodavanije_heading, "Expected 'Najprodavanije' in najprodavanije_heading"
+
+def test_click_delivery_info_link(driver):
+    accept_cookies(driver)
+    wait = WebDriverWait(driver, 30)
+
+    delivery_link = wait.until(EC.visibility_of_element_located((By.LINK_TEXT, "Dostava robe i načini plaćanja")))
+
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", delivery_link)
+
+    wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Dostava robe i načini plaćanja")))
+
+
+    driver.execute_script("arguments[0].click();", delivery_link)
+    delivery_info_heading=wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
+    assert "Dostava robe i načini plaćanja" in delivery_info_heading,"Error"
+
+
+
+
 
 
 
